@@ -1,0 +1,44 @@
+###############################################################
+type: "mo"     ###inceptor/mysql
+
+###############################################################
+#                           mo                             #
+###############################################################
+mo-conn: "jdbc:mysql:shuffle://localhost:3306/test1?characterSetResults=utf8&continueBatchOnError=false&useServerPrepStmts=true&alwaysSendSetIsolation=false&useLocalSessionState=true&zeroDateTimeBehavior=CONVERT_TO_NULL"
+mo-username: "root"
+mo-password: "1qaz!QAZ"
+mo-driver: "com.mysql.cj.jdbc.Driver"
+
+###############################################################
+#                           mysql                             #
+###############################################################
+mysql-server: "172.16.159.208"
+mysql-port: "3306"
+mysql-database: "suyouzhi"
+mysql-username: "root"
+mysql-password: "123456"
+mysql-driver: "com.mysql.cj.jdbc.Driver"
+mysql-conn: "kundb1"
+
+
+###############################################################
+#                           db2                               #
+###############################################################
+
+db2-server: "172.26.5.51"
+db2-port: "50000"
+db2-database: "testdb"
+db2-username: "db2inst1"
+db2-password: "inst"
+
+
+###############################################################
+#                           oracle                            #
+###############################################################
+oracle-host: "172.26.5.51"
+oracle-username: "system"
+oracle-password: "oracle"
+oracle-port: "1521"
+oracle-sid: "xe"
+
+##############################################################

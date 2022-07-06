@@ -1,0 +1,9 @@
+replace:
+- name: sequence
+  type: sequence
+  start: 100000
+  step: 1
+- name: string
+  type: sequence
+  start: 200000
+  step: 1
