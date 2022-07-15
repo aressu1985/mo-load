@@ -4,9 +4,9 @@ type: "mo"     ###inceptor/mysql
 ###############################################################
 #                           mo                             #
 ###############################################################
-mo-conn: "jdbc:mysql:shuffle://localhost:3306/test1?characterSetResults=utf8&continueBatchOnError=false&useServerPrepStmts=true&alwaysSendSetIsolation=false&useLocalSessionState=true&zeroDateTimeBehavior=CONVERT_TO_NULL"
-mo-username: "root"
-mo-password: "1qaz!QAZ"
+mo-conn: "jdbc:mysql://127.0.0.1:6001/sbtest?characterSetResults=utf8&continueBatchOnError=false&useServerPrepStmts=true&alwaysSendSetIsolation=false&useLocalSessionState=true&zeroDateTimeBehavior=CONVERT_TO_NULL&failoverReadOnly=false&serverTimezone=Asia/Shanghai"
+mo-username: "dump"
+mo-password: "111"
 mo-driver: "com.mysql.cj.jdbc.Driver"
 
 ###############################################################

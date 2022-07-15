@@ -15,7 +15,7 @@ done
 java -Xms10240M -Xmx30720M -cp ${libJars} \
         -Dconf.yml=${CONFIG_YAML} \
         -Dtransaction.yml=${TRANSACTION_YAML} \
-        io.mo.KunPerfTest
+        io.mo.MOPerfTest
 }
 
 boot
