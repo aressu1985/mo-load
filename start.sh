@@ -1,9 +1,26 @@
 #!/usr/bin/env bash
 
 WORKSPACE=$(cd `dirname $0`; pwd)
-CONFIG_YAML=$WORKSPACE/conf.yml
-TRANSACTION_YAML=$WORKSPACE/transaction.yml
 LIB_WORKSPACE=$WORKSPACE/lib
+CONFPATH=.
+
+while getopts ":ch" opt
+do
+    case $opt in
+        c)
+        CONFPATH="${OPTARG}"
+        ;;
+        h)
+        echo -e "Usage:　bash run.sh [option] [param] ...\nExcute mo oltp load task"
+        echo -e "   -c  set config path, mo-load will use run.yml, replace.yml from this path"
+        echo "For more support,please email to dong.su@matrixorigin.io"
+        exit 1
+        ;;
+        ?)
+        echo "Unkown parameter,please use -h to get help."
+        exit 1;;
+    esac
+done
 
 
 function boot {
@@ -13,8 +30,8 @@ do
   libJars=${libJars}:${libJar}
 done
 java -Xms10240M -Xmx30720M -cp ${libJars} \
-        -Dconf.yml=${CONFIG_YAML} \
-        -Dtransaction.yml=${TRANSACTION_YAML} \
+        -Drun.yml=${CONFPATH}/run.yml \
+        -Dreplace.yml=${CONFPATH}/replace.yml \
         io.mo.MOPerfTest
 }
 
