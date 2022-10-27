@@ -78,10 +78,7 @@ public class DBConfigUtil {
     public static String getMODatabase() {return (String) param.get("mo-database");}
     public static String getMODriver() {return (String) param.get("mo-driver");}
     public static String getMOConn() {return (String) param.get("mo-conn");}
-
-    /*
-    oracle
-     */
+    
     public static String getOracleServerIP() {return (String) param.get("oracle-host");}
     public static String getOracleUsername() {return (String) param.get("oracle-username");}
     public static String getOraclePassword() {return (String) param.get("oracle-password");}

@@ -27,7 +27,7 @@ public class RTBufferMonitor extends Thread {
     @Override
     public void run() {
         try {
-            //writer = new FileWriter("result/"+ CONFIG.EXECUTENAME+"/data/"+execResult.getName()+"-"+super.getId()+".dat");
+            //writer = new FileWriter("report/data/"+execResult.getName()+"-"+super.getId()+".dat");
             String value;
             while(buf.isValid()){
                 value = buf.getValue();
@@ -36,7 +36,7 @@ public class RTBufferMonitor extends Thread {
                     execResult.setTime(value);
                     value = buf.getValue();
                 }
-                //ßwriter.flush();
+                //writer.flush();
                 Thread.sleep(1000);
 
             }
@@ -61,7 +61,7 @@ public class RTBufferMonitor extends Thread {
             e.printStackTrace();
         }*/ catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        } 
     }
 
 }

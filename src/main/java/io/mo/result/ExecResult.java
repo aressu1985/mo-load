@@ -50,9 +50,8 @@ public class ExecResult {
 
     public ExecResult(String name){
         this.name = name;
-
         try {
-            error_writer = new FileWriter("result/"+ CONFIG.EXECUTENAME+"/error/"+name+".err");
+            error_writer = new FileWriter("report/error/" + name + ".err");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,11 +72,6 @@ public class ExecResult {
         if(min_rt < 0)  min_rt = time;
 
         if(this.start  == 0) this.start  = start;
-
-
-
-
-
         
         if(this.end == 0)  this.end = end;
 

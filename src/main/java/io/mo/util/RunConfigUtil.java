@@ -15,12 +15,17 @@ public class RunConfigUtil {
     private static Map map = null;
 
     private static List<Transaction> transactions = new ArrayList<>();
-    private static Logger LOG = Logger.getLogger(MOPerfTest.class.getName());
+    private static Logger LOG = Logger.getLogger(RunConfigUtil.class.getName());
 
     static {
         try {
-            map = transaction.getInfo("run.yml");
+            String runYml = System.getProperty("run.yml");
+            if(runYml == null)
+                runYml = "run.yml";
+            
+            map = transaction.getInfo(runYml);
             List transT = (List) map.get("transaction");
+            
             for(int i = 0; i < transT.size();i++){
                 Map transM = (Map)transT.get(i);
                 String name = (String)transM.get("name");
@@ -76,9 +81,8 @@ public class RunConfigUtil {
     }
 
     public static long getExecDuration() { return (int)map.get("duration"); }
-
-
-
+    
+    public static String getStdout(){return (String)map.get("stdout");}
 
     public static void main(String args[]){
         for(int i = 0; i < RunConfigUtil.getTransactionNum(); i++){

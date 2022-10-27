@@ -46,13 +46,6 @@ public class ChannelFileReader {
     }
 
     public static void main(String[] args) throws IOException {
-        ChannelFileReader reader = new ChannelFileReader("/home/transwarp/Program/kunperf/replace/tyxym_prefix.txt", 100000000);
-        long start = System.nanoTime();
-        while (reader.read() != -1){
-
-        };
-        long end = System.nanoTime();
-        reader.close();
-        System.out.println("ChannelFileReader: " + (end - start));
+        
     }
 }

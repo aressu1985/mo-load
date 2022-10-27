@@ -33,10 +33,10 @@ public class MOPerfTest {
 
     //初始化当前执行的结果文件目录
     public static void initDir(){
-        File data_dirs = new File("result/"+ CONFIG.EXECUTENAME+"/data/");
-        File error_dir = new File("result/"+ CONFIG.EXECUTENAME+"/error/");
-        if(!data_dirs.exists())
-            data_dirs.mkdirs();
+        //File data_dirs = new File("report/data/");
+        File error_dir = new File("report/error/");
+//        if(!data_dirs.exists())
+//            data_dirs.mkdirs();
 
         if(!error_dir.exists())
             error_dir.mkdirs();
@@ -66,8 +66,7 @@ public class MOPerfTest {
 
         transactions = new Transaction[transCount];
         execResult = new ExecResult[transCount];
-
-
+        
         //定义线程池
         //services = new ExecutorService[transCount];
 
@@ -78,15 +77,32 @@ public class MOPerfTest {
             resultProcessor.addResult(execResult[i]);
         }
     }
-
-
+    
     public static void main(String[] args) throws InterruptedException {
-
         ShutDownHookThread hookThread = new ShutDownHookThread();
         Runtime.getRuntime().addShutdownHook(hookThread);
 
         long excuteTime = RunConfigUtil.getExecDuration()*60*1000;
+        int t_num = 0;
 
+        if(args.length == 1){
+            if(args[0] != null){
+                excuteTime = Integer.parseInt(args[0])*60*1000;
+            }
+        }
+
+        if(args.length == 2){
+            if(args[0] != null){
+                excuteTime = Integer.parseInt(args[0])*60*1000;
+            }
+
+            if(args[1] != null){
+                t_num = Integer.parseInt(args[1]);
+            }
+        }
+        
+        LOG.info(String.format("The test will last for %d minutes.",excuteTime/1000/60));
+        
         //初始化结果目录
         initDir();
 
@@ -96,13 +112,14 @@ public class MOPerfTest {
         //初始化
         initTransaction();
 
-
-
-
-
         LOG.info("Initializing the execution threads,please wait for serval minutes.");
         for(int i = 0; i < transactions.length; i++){
-            int t_num = transactions[i].getTheadnum();
+            if(t_num == 0)
+                t_num = transactions[i].getTheadnum();
+            else
+                transactions[i].setTheadnum(t_num);
+            
+            LOG.info(String.format("transaction[%s].tnum = %d", transactions[i].getName(),t_num));
             TransExecutor[] executors = new TransExecutor[t_num];
 
             //初始化线程组
@@ -112,8 +129,7 @@ public class MOPerfTest {
             CyclicBarrier barrier = new CyclicBarrier(t_num, new Runnable() {
                 @Override
                 public void run() {
-                    LOG.info("All the he execution threads has been prepared,and start running.");
-
+                    LOG.info("All the he execution threads has been prepared and started running, pleas wait.....");
                     //实时计算性能测试结果数据
                     resultProcessor.start();
                 }
@@ -145,7 +161,7 @@ public class MOPerfTest {
                 }
             }
 
-            LOG.info("All the he execution threads has been prepared,and start running.");
+            LOG.info("All the he execution threads has been prepared,and start running.......");
 
             //启动所有执行线程
             for(int j = 0; j < thread.length; j++){
@@ -208,7 +224,6 @@ public class MOPerfTest {
                 //e.printStackTrace();
                 LOG.info("Program exit completely.");
             }
-
         }
     }
 

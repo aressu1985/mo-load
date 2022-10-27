@@ -17,7 +17,11 @@ public class ReplaceConfigUtil {
 
     static {
         try {
-            Map param = replace.getInfo("replace.yml");
+            String replaceYml = System.getProperty("replace.yml");
+            if(replaceYml == null)
+                replaceYml = "replace.yml";
+            
+            Map param = replace.getInfo(replaceYml);
             List varsT = new ArrayList();
 
             if(null != param.get("replace"))

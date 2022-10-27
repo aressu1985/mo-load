@@ -8,8 +8,8 @@ import java.sql.SQLException;
 public class ConnectionOperation {
 
     public static Connection getConnection() throws Exception {
-        DatabaseConnection databaseConnection;
-        if (DBConfigUtil.getType().equals("mysql")){
+        DatabaseConnection databaseConnection = new MOConnection();
+       /* if (DBConfigUtil.getType().equals("mysql")){
             databaseConnection = new MysqlConnection();
         }else if(DBConfigUtil.getType().equals("db2")){
             databaseConnection = new DB2Connection();
@@ -20,7 +20,7 @@ public class ConnectionOperation {
         }
         else{
             throw new Exception("Don't support [" + DBConfigUtil.getType() + "] database!" );
-        }
+        }*/
         //System.out.println("数据库连接成功!");
         return databaseConnection.BuildDatabaseConnection();
     }

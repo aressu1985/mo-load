@@ -106,12 +106,12 @@ public class TransExecutor implements Runnable {
 
                         try {
                             long beginTime = System.currentTimeMillis();
-                            statement.execute("begin;");
+                            //statement.execute("begin;");
                             for (int i = 0; i < script.length(); i++) {
                                 boolean rs = statement.execute(script.getCommand(i));
                             }
-                            statement.execute("commit;");
-                            //connection.commit();
+                            //statement.execute("commit;");
+                            connection.commit();
                             long endTime = System.currentTimeMillis();
                             //将执行时间和结果保存在临时缓冲区里
                             rtBuffer.setValue(transName + "=" + beginTime + ":" + endTime);
@@ -125,8 +125,8 @@ public class TransExecutor implements Runnable {
                                     execResult.setError(transName+":\r\n"+e.getMessage()+"\r\n");
                                     continue;
                                 }
-                                statement.execute("rollback;");
-                                //connection.rollback();
+                                //statement.execute("rollback;");
+                                connection.rollback();
                             } catch (SQLException e1) {
                                 e1.printStackTrace();
                             } catch (Exception ex) {

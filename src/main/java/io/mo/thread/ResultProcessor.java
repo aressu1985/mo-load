@@ -1,7 +1,11 @@
 package io.mo.thread;
 
 import io.mo.CONFIG;
+import io.mo.MOPerfTest;
 import io.mo.result.ExecResult;
+import io.mo.util.RunConfigUtil;
+import org.apache.log4j.LogMF;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -23,18 +27,24 @@ public class ResultProcessor extends Thread{
     private FileWriter summary_writer;
     private FileWriter result_writer;
     private StringBuffer summary;
+    
+    private String stdout =null;
+
+    private static Logger LOG = Logger.getLogger(MOPerfTest.class.getName());
 
     public ResultProcessor(){
         summary  = new StringBuffer();
-        File res_dir = new File("result/"+ CONFIG.EXECUTENAME+"/");
+        File res_dir = new File("report/");
         if(!res_dir.exists())
             res_dir.mkdirs();
         try {
-            summary_writer = new FileWriter("result/"+ CONFIG.EXECUTENAME+"/summary.txt");
-            result_writer  = new FileWriter("result/"+ CONFIG.EXECUTENAME+"/result.txt");
+            summary_writer = new FileWriter("report/summary.txt");
+            result_writer  = new FileWriter("report/result.txt");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        stdout = RunConfigUtil.getStdout();
     }
 
     public void addResult(ExecResult execResult){
@@ -44,7 +54,10 @@ public class ResultProcessor extends Thread{
 
     @Override
     public void run() {
-        System.out.println(getTitle());
+        if(stdout.equalsIgnoreCase("console")) {
+            System.out.println(getTitle());
+        }
+        
         try {
             result_writer.write(getTitle());
         } catch (IOException e) {
@@ -70,13 +83,17 @@ public class ResultProcessor extends Thread{
                     }
                 }
                 format += "\33["+(objs.length+1)+"A\r\n";
-                System.out.printf(format,objs);
-                System.out.printf("\033["+objs.length+"B\r\n");
+
+                if(stdout.equalsIgnoreCase("console")) {
+                    System.out.printf(format, objs);
+                    System.out.printf("\033[" + objs.length + "B\r\n");
+                }
 
                 try {
                     summary_writer.write(getSummary());
                     summary_writer.flush();
                     summary_writer.close();
+                    LOG.info("\n"+getSummary());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -99,7 +116,9 @@ public class ResultProcessor extends Thread{
 
             }
             format += "\033["+(objs.length+1)+"A\r\n";
-            System.out.printf(format,objs);
+
+            if(stdout.equalsIgnoreCase("console"))
+                System.out.printf(format,objs);
 
             for(int i = 0; i < results.size();i++){
                 results.get(i).flushErrors();
