@@ -140,6 +140,10 @@ public class MOPerfTest {
                 try {
                     //获取db连接，每个executor负责一个链接
                     Connection connection = ConnectionOperation.getConnection();
+                    if(connection == null){
+                        LOG.error(" mo-load can not get invalid connection after trying 3 times, and the program will exit");
+                        System.exit(1);
+                    }
                     hookThread.addConnection(connection);
 
                     //初始化发送缓冲区，每个executor拥有一个发送缓冲区
@@ -152,7 +156,7 @@ public class MOPerfTest {
                         buffer.fill();
                     }
 
-                    executors[j] = new TransExecutor(connection,buffer,execResult[i],barrier);
+                    executors[j] = new TransExecutor(j,connection,buffer,execResult[i],barrier);
                     thread[j] = new Thread(executors[j]);
                     //services[i].execute(executors[j]);
                 } catch (Exception e) {
@@ -182,11 +186,18 @@ public class MOPerfTest {
 
         //实时计算性能测试结果数据
         resultProcessor.start();
-
-
+        
         //等待所有线程执行
-        Thread.sleep(excuteTime);
-        CONFIG.TIMEOUT = true;
+        long runT = 0;
+        long interval = 5*1000;
+        while(!CONFIG.TIMEOUT){
+            if(runT >= excuteTime){
+                CONFIG.TIMEOUT = true;
+            }else{
+                Thread.sleep(interval);
+                runT += interval;
+            }
+        }
 
         transBufferProducer.setTerminated(true);
 

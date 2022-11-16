@@ -16,20 +16,24 @@ public class MOConnection implements DatabaseConnection {
     private static String driver = MoConfUtil.getDriver();
 
     @Override
-    public Connection BuildDatabaseConnection() throws SQLException {
+    public Connection BuildDatabaseConnection() {
 
-        try{
-            Class.forName(driver).newInstance();
-        }catch (ClassNotFoundException e){
-            e.printStackTrace();
-            System.exit(1);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
+        for(int i = 0; i < 3; i++) {
+            try {
+                Class.forName(driver);
+                Connection connection = DriverManager.getConnection(conn,username,password);
+                return connection;
+            } catch (SQLException e) {
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
         }
-
-        return DriverManager.getConnection(conn,username,password);
-
+        return null;
     }
 }

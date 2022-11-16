@@ -30,7 +30,7 @@ public class ResultProcessor extends Thread{
     
     private String stdout =null;
 
-    private static Logger LOG = Logger.getLogger(MOPerfTest.class.getName());
+    private static Logger LOG = Logger.getLogger(ResultProcessor.class.getName());
 
     public ResultProcessor(){
         summary  = new StringBuffer();
@@ -189,7 +189,7 @@ public class ResultProcessor extends Thread{
             if(result.getThreadnum() != 0)
                 return false;
         }
-
+        CONFIG.TIMEOUT = true;
         return true;
     }
 

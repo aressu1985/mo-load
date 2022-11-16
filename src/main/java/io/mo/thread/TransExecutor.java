@@ -19,7 +19,7 @@ import java.sql.Statement;
 import java.util.concurrent.CyclicBarrier;
 
 public class TransExecutor implements Runnable {
-    private static Logger LOG = Logger.getLogger(MOPerfTest.class.getName());
+    private static Logger LOG = Logger.getLogger(TransExecutor.class.getName());
 
     private TransBuffer transBuffer;
 
@@ -40,8 +40,10 @@ public class TransExecutor implements Runnable {
     private Transaction transaction;
 
     private CyclicBarrier barrier;
+    
+    private int id;
 
-    public TransExecutor(Connection connection,TransBuffer transBuffer,ExecResult execResult,CyclicBarrier barrier){
+    public TransExecutor(int id , Connection connection,TransBuffer transBuffer,ExecResult execResult,CyclicBarrier barrier){
         this.transBuffer = transBuffer;
         this.transName = transBuffer.getTransaction().getName();
 
@@ -54,7 +56,7 @@ public class TransExecutor implements Runnable {
         this.connection = connection;
 
         this.barrier = barrier;
-
+        this.id = id;
         try {
             if(transaction.isPrepared()){
                 this.transaction = this.transaction.copy();
@@ -87,20 +89,7 @@ public class TransExecutor implements Runnable {
                         e.printStackTrace();
                         System.exit(0);
                     }
-
-                    //初始化sendbuffer
-                    //transBuffer.fill();
-
-                    /*try {
-                        //等待所有线程军初始化完毕后，在统一执行
-                        barrier.await();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (BrokenBarrierException e) {
-                        e.printStackTrace();
-                    }*/
-
-
+                    
                     while(!CONFIG.TIMEOUT) {
                         SQLScript script = transBuffer.getScript();
 
@@ -120,6 +109,12 @@ public class TransExecutor implements Runnable {
                             try {
                                 if(connection == null || connection.isClosed()) {
                                     connection = ConnectionOperation.getConnection();
+                                    if(connection == null){
+                                        running = false;
+                                        rtBuffer.setValid(false);
+                                        LOG.error(String.format("Thread[id=%d] can not get invalid connection after trying 3 times, and will exit",id));
+                                        break;
+                                    }
                                     statement = connection.createStatement();
                                     connection.setAutoCommit(false);
                                     execResult.setError(transName+":\r\n"+e.getMessage()+"\r\n");
@@ -141,18 +136,6 @@ public class TransExecutor implements Runnable {
                     //如果没有prepare
                     if(!transaction.isPrepared()){
 
-                        //初始化sendbuffer
-                        //transBuffer.fill();
-
-                        /*try {
-                            //等待所有线程军初始化完毕后，在统一执行
-                            barrier.await();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (BrokenBarrierException e) {
-                            e.printStackTrace();
-                        }*/
-
                         while(!CONFIG.TIMEOUT){
                             SQLScript script = transBuffer.getScript();
                             try {
@@ -166,10 +149,15 @@ public class TransExecutor implements Runnable {
                                 rtBuffer.setValue(transName+"="+beginTime+":"+endTime);
 
                             } catch (SQLException e) {
-                                //LOG.error(e.getStackTrace());
                                 try {
                                     if(connection == null || connection.isClosed()) {
                                         connection = ConnectionOperation.getConnection();
+                                        if(connection == null){
+                                            running = false;
+                                            rtBuffer.setValid(false);
+                                            LOG.error(String.format("Thread[id=%d] can not get invalid connection after trying 3 times, and will exit",id));
+                                            break;
+                                        }
                                         statement = connection.createStatement();
                                         execResult.setError(transName+":\r\n"+e.getMessage()+"\r\n");
                                         continue;
@@ -210,6 +198,12 @@ public class TransExecutor implements Runnable {
                                 try {
                                     if(connection == null || connection.isClosed()) {
                                         connection = ConnectionOperation.getConnection();
+                                        if(connection == null){
+                                            running = false;
+                                            rtBuffer.setValid(false);
+                                            LOG.error(String.format("Thread[id=%d] can not get invalid connection after trying 3 times, and will exit",id));
+                                            break;
+                                        }
                                         statement = connection.createStatement();
                                         execResult.setError(transName+":\r\n"+e.getMessage()+"\r\n");
                                         continue;
