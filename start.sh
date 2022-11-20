@@ -3,6 +3,8 @@
 WORKSPACE=$(cd `dirname $0`; pwd)
 LIB_WORKSPACE=$WORKSPACE/lib
 CONFPATH=.
+DURATION=0
+THREAD=0
 
 while getopts ":c:n:m:t:d:s:h" opt
 do
@@ -27,6 +29,7 @@ do
         TABLESIZE="${OPTARG}"
         ;;
         d)
+        expr ${OPTARG} "+" 10 &> /dev/null
         if [ $? -ne 0 ]; then
           echo 'The duration ['${OPTARG}'] is not a number'
           exit 1
@@ -34,6 +37,7 @@ do
         DURATION="${OPTARG}"
         ;;
         t)
+        expr ${OPTARG} "+" 10 &> /dev/null
         if [ $? -ne 0 ]; then
           echo 'The threads ['${OPTARG}'] is not a number'
           exit 1
@@ -67,7 +71,6 @@ for libJar in `find ${LIB_WORKSPACE} -name "*.jar"`
 do
   libJars=${libJars}:${libJar}
 done
-echo "${CONFPATH}"
 java -Xms1024M -Xmx30720M -cp ${libJars} \
         -Drun.yml=${CONFPATH}/run.yml \
         -Dreplace.yml=${CONFPATH}/replace.yml \

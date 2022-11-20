@@ -86,13 +86,13 @@ public class MOPerfTest {
         int t_num = 0;
 
         if(args.length == 1){
-            if(args[0] != null){
+            if(args[0] != null && !"0".equalsIgnoreCase(args[0])){
                 excuteTime = Integer.parseInt(args[0])*60*1000;
             }
         }
 
         if(args.length == 2){
-            if(args[0] != null){
+            if(args[0] != null && !"0".equalsIgnoreCase(args[0])){
                 excuteTime = Integer.parseInt(args[0])*60*1000;
             }
 
