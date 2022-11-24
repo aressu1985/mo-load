@@ -1,12 +1,10 @@
 package io.mo.conn;
 
-import io.mo.util.DBConfigUtil;
 import io.mo.util.MoConfUtil;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class MOConnection implements DatabaseConnection {
     private static String conn = MoConfUtil.getURL();

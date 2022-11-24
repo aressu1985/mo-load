@@ -1,7 +1,5 @@
 package io.mo.conn;
 
-import io.mo.util.DBConfigUtil;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 
